@@ -44,18 +44,39 @@ print (dataset.describe())
 print (dataset.info())
 """ 3. checking missing data """
 print (dataset.isnull().sum())
+```
+Display some data
+```
 """ dispaly data""" 
 print (dataset.head(500))
 ```
+![alt text](https://github.com/WaedSaleh/RegressionProject/blob/master/Images/Data.png)
 # Data visualization
+We now have a basic idea about the data. We need to extend that with some visualizations.
+
+We are going to look at two types of plots:
+
+1. Univariate plots to better understand each attribute.
+2. Multivariate plots to better understand the relationships between attributes.
+- Univariate plots
+We can also create a histogram of each input variable to get an idea of the distribution.
 ```
 # histograms
 dataset.hist()
 plt.show()
+```
+![alt text](https://github.com/WaedSaleh/RegressionProject/blob/master/Images/DataVisualization.png)
+
+Great! We are seeing each feature of our data-set as a histogram.
+- Multivariate Plots
+Now we can look at the interactions between the variables.
+First, let’s look at scatterplots of all pairs of attributes. This can be helpful to spot structured relationships between input variables.
+```
 # scatter plot matrix
 scatter_matrix(dataset)
 plt.show()
 ```
+![alt text](https://github.com/WaedSaleh/RegressionProject/blob/master/Images/MultivariatePlots.png)
 # Data preparation
 Now, we need to separate the data into the features and targets. The target is also known as the label. It is the value we want to predict, in this case, the actual individual rate and the features are all the columns the model uses to make a prediction.
 ```
