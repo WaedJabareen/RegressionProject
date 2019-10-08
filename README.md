@@ -198,71 +198,59 @@ results.append(scores)
 msg = "%f (%f)" % (scores.mean(), scores.std())
 print(msg)
 ``` 
+Now the accuracy after optimization: 
+-26.059689 (0.366915)
 # Use model for predictions
+```
 rfr.fit(X_train, Y_train)
 print(rfr.score(X_validation,Y_validation))
-# Use the forest's predict method on the test data
+```
+ Use the forest's predict method on the test data
+```
 predictions = rfr.predict(X_validation)
-# Calculate the absolute errors
+```
+**Calculate the absolute errors**
+```
 errors = abs(predictions - Y_validation)
 # Print out the mean absolute error (mae)
 print('Mean Absolute Error:', round(np.mean(errors), 2), 'degrees.')
-# Calculate mean absolute percentage error (MAPE)
+```
+Mean Absolute Error: 24.62 degrees.
+ **Calculate mean absolute percentage error (MAPE)**
+ ```
 mape = 100 * (errors / Y_validation)
 # Calculate and display accuracy
 accuracy = 100 - np.mean(mape)
 print('Accuracy:', round(accuracy, 2), '%.')
-
+```
+Accuracy: 96.2 %.
+Display some data after prediction 
+```
 df = pd.DataFrame({'Actual': Y_validation.values.flatten(), 'Predicted': predictions.flatten()})
 df
-# visualize comparison result as a bar graph using the below script :
+```
+![alt text](https://github.com/WaedSaleh/RegressionProject/blob/master/Images/PredctionData.PNG)
+
+Visualize comparison result as a bar graph using the below script :
+```
 df1 = df.head(25)
 print(df1)
 df1.plot(kind='bar',figsize=(16,10))
 plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
 plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
 plt.show()
+```
 
-print('Mean Absolute Error:', metrics.mean_absolute_error(Y_validation, predictions))  
-print('Mean Squared Error:', metrics.mean_squared_error(Y_validation, predictions))  
-print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(Y_validation, predictions)))
-{'max_depth': 6, 'n_estimators': 100}
--26.059689 (0.366915)
-0.9829590052828208
-Mean Absolute Error: 24.62 degrees.
-Accuracy: 96.2 %.
-       Actual    Predicted
-0    694.9200   685.602259
-1   1012.7536  1008.744533
-2    370.1950   368.018750
-3    269.3575   269.608863
-4    518.5075   551.840549
-5    291.0525   307.656948
-6    335.7142   339.928229
-7   1180.4575  1185.639031
-8    569.3400   517.482574
-9    700.5000   629.523157
-10   317.6950   320.559078
-11   353.9946   351.001028
-12   349.9800   323.401327
-13   433.3866   384.325044
-14   495.6133   491.238708
-15   321.8142   327.266310
-16   423.7642   415.630270
-17   413.8807   409.669822
-18   284.7325   313.422457
-19   352.5550   377.126581
-20   361.5700   372.898181
-21   775.5937   763.104728
-22   822.5400   879.769369
-23   864.8500   804.195131
-24   265.1400   266.346800
+![alt text](https://github.com/WaedSaleh/RegressionProject/blob/master/Images/Real.png)
 
-￼
-Mean Absolute Error: 24.61950979298734
-Mean Squared Error: 1754.5428979326662
-Root Mean Squared Error: 41.88726414953197
+
 # Save the model to disk
+Finally  we will save the model,we save model’s parameter and coefficients i.e.; model’s weights and biases to file on the disk. We can later load the saved model’s weights and biases to make a prediction for unseen data.
+Saving of data is also called as Serialization where we store an object as a stream of bytes to save on a disk
+We will discuss two different ways to save and load the scikit-learn models using
+- pickle
+- joblib
+
 ``` 
 filename = 'rate_finalized_model.sav'
 pickle.dump(rfr, open(filename, 'wb'))
