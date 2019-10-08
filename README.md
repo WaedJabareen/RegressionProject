@@ -126,8 +126,8 @@ X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(
 Now it is time to create some models of the data and estimate their accuracy on unseen data.
 
 We don’t know which algorithms would be good on this problem or what configurations to use. We get an idea from the plots that some of the data are non linearly separable in some dimensions, so we are expecting generally good results.
-And  it seems like non liner regssion , we will evaluaute some non liner  regession algorithms.
-Let’s evaluate 3 different regession algorithms:
+And  it seems like non liner regression , we will evaluaute some non liner  regression algorithms.
+Let’s evaluate 3 different regression algorithms:
 1. K-Nearest Neighbors Regression (KNR)
 2.  Decision Tree Regressor (DTR)
 3. Random Forest Regressor (RFR).
