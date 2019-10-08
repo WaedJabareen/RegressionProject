@@ -216,6 +216,7 @@ errors = abs(predictions - Y_validation)
 print('Mean Absolute Error:', round(np.mean(errors), 2), 'degrees.')
 ```
 Mean Absolute Error: 24.62 degrees.
+
  **Calculate mean absolute percentage error (MAPE)**
  ```
 mape = 100 * (errors / Y_validation)
@@ -224,6 +225,7 @@ accuracy = 100 - np.mean(mape)
 print('Accuracy:', round(accuracy, 2), '%.')
 ```
 Accuracy: 96.2 %.
+
 Display some data after prediction 
 ```
 df = pd.DataFrame({'Actual': Y_validation.values.flatten(), 'Predicted': predictions.flatten()})
