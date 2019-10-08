@@ -122,3 +122,118 @@ validation_size = 0.25
 seed = 7
 X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X_train_ohe, Y, test_size=validation_size, random_state=seed)
 ```
+#  Evaluate Some Algorithms
+Now it is time to create some models of the data and estimate their accuracy on unseen data.
+
+We don’t know which algorithms would be good on this problem or what configurations to use. We get an idea from the plots that some of the data are non linearly separable in some dimensions, so we are expecting generally good results.
+And  it seems like non liner regssion , we will evaluaute some non liner  regession algorithms.
+Let’s evaluate 3 different regession algorithms:
+1. K-Nearest Neighbors Regression (KNR)
+2.  Decision Tree Regressor (DTR)
+3. Random Forest Regressor (RFR).
+
+```
+# Spot Check Algorithms
+models = []
+models.append(('KNR', KNeighborsRegressor()))
+models.append(('DTR', DecisionTreeRegressor()))
+models.append(('RFR', RandomForestRegressor(n_estimators=100)))
+```
+Evaluate each model in turn, we will use 10-fold cross validation to estimate accuracy.
+
+This will split our dataset into 10 parts, train on 9 and test on 1 and repeat for all combinations of train-test splits.
+
+```
+results = []
+names = []
+for name, model in models: 
+    kfold = model_selection.KFold(n_splits=10, random_state=seed)
+    cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
+    results.append(cv_results)
+    names.append(name)
+    msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
+    print(msg)
+``` 
+
+ # Select Best Model
+We now have 3 models and accuracy estimations for each. We need to compare the models to each other and select the most accurate.
+
+Running the example above, we get the following raw results:
+``` 
+KNR: -7717.310699 (199.568970)
+DTR: -3262.630863 (189.717362)
+RFR: -2056.491810 (96.323356)
+``` 
+# Hyperparameter Tuning the Random Forest
+So based on our evaluation of multiple algorithms, we found Random Forest had a better score. 
+But we're not too impressed by the results. And now it is the time to move on to model hyperparameter tuning to get better performance of our model.
+In sklearn, hyperparameters are passed in as arguments to the constructor of the model classes.
+# Tuning Strategies
+We will use Grid Search for optimizing hyperparameters:
+To use Grid Search, we make another grid based on the best values provided by random search:
+Using sklearn'sGridSearchCV, we first define our grid of parameters to search over and then run the grid search.
+``` 
+# Perform Grid-Search
+gsc = GridSearchCV(
+        estimator=RandomForestRegressor(),
+        param_grid={
+            'max_depth': range(3,7),
+            'n_estimators': (10, 50, 100, 1000),
+        },
+        cv=10, scoring='neg_mean_squared_error', verbose=0,n_jobs=-1)
+    
+grid_result = gsc.fit(X_train, Y_train)
+best_params = grid_result.best_params_
+print(best_params)
+``` 
+Now we will use the optimized parameters in our model.
+``` 
+rfr = RandomForestRegressor(best_params['n_estimators'],random_state=seed, verbose=False,oob_score=True,n_jobs=-1)
+``` 
+To check the accuracy, we will use the cross-validation function.
+``` 
+# Perform K-Fold CV
+scores = model_selection.cross_val_score(rfr, X_train, Y_train, cv=10, scoring='neg_mean_absolute_error')
+results.append(scores)
+msg = "%f (%f)" % (scores.mean(), scores.std())
+print(msg)
+``` 
+# Use model for predictions
+rfr.fit(X_train, Y_train)
+print(rfr.score(X_validation,Y_validation))
+# Use the forest's predict method on the test data
+predictions = rfr.predict(X_validation)
+# Calculate the absolute errors
+errors = abs(predictions - Y_validation)
+# Print out the mean absolute error (mae)
+print('Mean Absolute Error:', round(np.mean(errors), 2), 'degrees.')
+# Calculate mean absolute percentage error (MAPE)
+mape = 100 * (errors / Y_validation)
+# Calculate and display accuracy
+accuracy = 100 - np.mean(mape)
+print('Accuracy:', round(accuracy, 2), '%.')
+
+df = pd.DataFrame({'Actual': Y_validation.values.flatten(), 'Predicted': predictions.flatten()})
+df
+# visualize comparison result as a bar graph using the below script :
+df1 = df.head(25)
+print(df1)
+df1.plot(kind='bar',figsize=(16,10))
+plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
+plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.show()
+
+print('Mean Absolute Error:', metrics.mean_absolute_error(Y_validation, predictions))  
+print('Mean Squared Error:', metrics.mean_squared_error(Y_validation, predictions))  
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(Y_validation, predictions)))
+
+# Save the model to disk
+``` 
+filename = 'rate_finalized_model.sav'
+pickle.dump(rfr, open(filename, 'wb'))
+
+from sklearn.externals import joblib 
+  
+# Save the model as a pickle in a file 
+joblib.dump(rfr, 'rate_model.pkl') 
+``` 
