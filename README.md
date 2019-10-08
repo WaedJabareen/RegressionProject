@@ -226,7 +226,42 @@ plt.show()
 print('Mean Absolute Error:', metrics.mean_absolute_error(Y_validation, predictions))  
 print('Mean Squared Error:', metrics.mean_squared_error(Y_validation, predictions))  
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(Y_validation, predictions)))
+{'max_depth': 6, 'n_estimators': 100}
+-26.059689 (0.366915)
+0.9829590052828208
+Mean Absolute Error: 24.62 degrees.
+Accuracy: 96.2 %.
+       Actual    Predicted
+0    694.9200   685.602259
+1   1012.7536  1008.744533
+2    370.1950   368.018750
+3    269.3575   269.608863
+4    518.5075   551.840549
+5    291.0525   307.656948
+6    335.7142   339.928229
+7   1180.4575  1185.639031
+8    569.3400   517.482574
+9    700.5000   629.523157
+10   317.6950   320.559078
+11   353.9946   351.001028
+12   349.9800   323.401327
+13   433.3866   384.325044
+14   495.6133   491.238708
+15   321.8142   327.266310
+16   423.7642   415.630270
+17   413.8807   409.669822
+18   284.7325   313.422457
+19   352.5550   377.126581
+20   361.5700   372.898181
+21   775.5937   763.104728
+22   822.5400   879.769369
+23   864.8500   804.195131
+24   265.1400   266.346800
 
+￼
+Mean Absolute Error: 24.61950979298734
+Mean Squared Error: 1754.5428979326662
+Root Mean Squared Error: 41.88726414953197
 # Save the model to disk
 ``` 
 filename = 'rate_finalized_model.sav'
